@@ -25,9 +25,9 @@ module.exports = function (app) {
       request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + query.stock + '&apikey=' + process.env.API_KEY,
               function(err,res){
         result = {stockData: {stock: res.body["Global Quote"]["01. symbol"], price: res.body["Global Quote"]["05. price"]}}
-        console.log(res.body);
-      })
-      
+        req.query.like ? result.likes = 1 : result.likes = 0
+        console.log(result)
+      }).pipe(res.json(result))
       // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     });
     
