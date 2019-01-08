@@ -10,8 +10,9 @@
 
 var expect = require('chai').expect;
 var MongoClient = require('mongodb');
+var mongoose = require('mongoose');
 
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+mongoose.connect(process.env.DB, {useNewUrlParser: true});
 
 module.exports = function (app) {
 
