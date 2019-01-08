@@ -8,6 +8,7 @@ dependencies:
   mocha: 5.2.0
   mongodb: 3.1.10
   mongoose: 5.4.2
+  request: 2.88.0
   zombie: 6.1.4
 packages:
   /@types/chai/4.1.7:
@@ -1640,4 +1641,5 @@ specifiers:
   mocha: ^5.2.0
   mongodb: ^3.1.10
   mongoose: ^5.4.2
+  request: ^2.88.0
   zombie: ^6.1.4
