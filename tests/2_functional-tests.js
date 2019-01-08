@@ -26,7 +26,8 @@ suite('Functional Tests', function() {
           assert.hasAllKeys(res.body, ['stockData']);
           assert.isObject(res.body.stockData);
           assert.isString(res.body.stockData.stock);
-          
+          assert.isString(res.body.stockData.price);
+          assert.isNumber(res.body.stockData.likes);
           done();
         });
       });
