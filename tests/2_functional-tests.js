@@ -23,7 +23,6 @@ suite('Functional Tests', function() {
         .query({stock: 'goog'})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          assert.isObject(res.body.stockData
           assert.isObject(res.body.stockData);
           assert.isString(res.body.stockData.stock);
           assert.isString(res.body.stockData.price);

@@ -21,13 +21,12 @@ module.exports = function (app) {
     .get(function (req, res){
       var query = req.query;
       var result;
-      console.log(query)
       request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + query.stock + '&apikey=' + process.env.API_KEY,
               function(err,res){
-        result = {stockData: {stock: res.body["Global Quote"]["01. symbol"], price: res.body["Global Quote"]["05. price"]}}
-        req.query.like ? result.likes = 1 : result.likes = 0
-        console.log(result)
-      }).pipe(res.json(result))
+        var response = JSON.parse(res.body);
+        res = {stockData: {stock: response["Global Quote"]["01. symbol"], price: response["Global Quote"]["05. price"]}}
+        req.query.like ? result.stockData.likes = 1 : result.stockData.likes = 0
+      }).pipe(res);
       // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     });
     
