@@ -20,8 +20,14 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(function (req, res){
       var query = req.query;
+      var result;
       console.log(query)
-      http.request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + 
+      request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + query.stock + '&apikey=' + process.env.API_KEY,
+              function(err,res){
+        result = {stockData: {stock: res.body["Global Quote"]["01. symbol"], price: res.body["Global Quote"]["05. price"]}}
+        console.log(res.body);
+      })
+      
       // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     });
     
