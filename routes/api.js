@@ -11,7 +11,7 @@
 var expect = require('chai').expect;
 var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
-var rp = require('request');
+var rp = require('request-promise');
 
 mongoose.connect(process.env.DB, {useNewUrlParser: true});
 
@@ -21,11 +21,11 @@ module.exports = function (app) {
     .get(function (req, res){
       var query = req.query;
       var result;
-      request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + query.stock + '&apikey=' + process.env.API_KEY,
-              function(err,res){
+      rp('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + query.stock + '&apikey=' + process.env.API_KEY)
+       .then(function(err,res){
          result = JSON.parse(res.body);
-         console.log(result)
       })
+      console.log(result)
       // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     });
     
