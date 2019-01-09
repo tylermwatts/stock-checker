@@ -16,11 +16,11 @@ var request = require('request');
 mongoose.connect(process.env.DB, {useNewUrlParser: true});
 
 module.exports = function (app) {
-  function getStockJson(stock){
-    request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY, function(err,res){
+  async function getStockJson(stock){
+    var stringifiedJson = await request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY, function(err,res){
       if (err) return JSON.stringify(err)
-      var stringifiedJson = JSON.parse(res.body);
-      return stringifiedJson;
+      console.log(res.body);
+      return JSON.parse(res.body);
     })
   }
 
