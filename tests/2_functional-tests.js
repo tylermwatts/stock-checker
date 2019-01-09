@@ -50,12 +50,31 @@ suite('Functional Tests', function() {
       test('1 stock with like again (ensure likes arent double counted)', function(done) {
         chai.request(server)
           .get('/api/stock-prices')
-          .query()
-          .end()
+          .query({stock: 'msft', like: true})
+          .end((err,res)=>{
+            assert.equal(res.status, 200);
+            assert.equal(res.body.stockData.stock, 'MSFT');
+            assert.isString(res.body.stockData.price);
+            assert.equal(res.body.stockData.likes, 1);
+            done();
+          })
       });
       
       test('2 stocks', function(done) {
-        
+        chai.request(server)
+          .get('/api/stock-prices')
+          .query({stock: 'msft', stock: 'goog'})
+          .end((err,res)=>{
+            assert.equal(res.status, 200);
+            assert.isArray(res.body.stockData);
+            assert.equal(res.body[0].stock, 'MSFT');
+            assert.equal(res.body[1].stock, 'GOOG');
+            assert.isString(res.body[0].price);
+            assert.isString(res.body[1].price);
+            assert.isNumber(res.body[0].likes);
+            assert.isNumber(res.body[1].likes);
+            done();
+          })
       });
       
       test('2 stocks with like', function(done) {
