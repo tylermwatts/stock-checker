@@ -25,27 +25,39 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           assert.isObject(res.body.stockData);
           assert.isString(res.body.stockData.stock);
+          assert.equal(res.body.stockData.stock, 'GOOG');
           assert.isString(res.body.stockData.price);
           assert.isNumber(res.body.stockData.likes);
+          assert.equal(res.body.stockData.likes, 0);
           done();
         });
       });
       
-//       test('1 stock with like', function(done) {
-        
-//       });
+      test('1 stock with like', function(done) {
+        chai.request(server)
+          .get('/api/stock-prices')
+          .query({stock: 'msft', like: true})
+          .end((err,res)=>{
+            assert.equal(res.status, 200);
+            assert.equal(res.body.stockData.stock, 'MSFT');
+            assert.isString(res.body.stockData.price);
+            assert.isNumber(res.body.stockData.likes);
+            assert.equal(res.body.stockData.likes, 1);
+            done();
+          })
+      });
       
-//       test('1 stock with like again (ensure likes arent double counted)', function(done) {
+      test('1 stock with like again (ensure likes arent double counted)', function(done) {
         
-//       });
+      });
       
-//       test('2 stocks', function(done) {
+      test('2 stocks', function(done) {
         
-//       });
+      });
       
-//       test('2 stocks with like', function(done) {
+      test('2 stocks with like', function(done) {
         
-//       });
+      });
       
     });
 

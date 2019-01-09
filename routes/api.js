@@ -20,10 +20,12 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(function (req, res){
       var query = req.query;
-      var result;
       request.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+query.stock+'&apikey='+process.env.API_KEY, function(err, response, body){
-        result = JSON.parse(response['body']['Global Quote']);
-        var stockObj = {stockData: {stock: result}}
+        if (err) return res.json({error: err});
+        var result = JSON.parse(response.body);
+        var stockObj = {stockData: {stock: result['Global Quote']['01. symbol'], price: result['Global Quote']['05. price']}}
+        query.like ? stockObj.stockData.likes = 1 : stockObj.stockData.likes = 0;
+        res.json(stockObj);
       })
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
