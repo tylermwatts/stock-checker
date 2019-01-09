@@ -33,10 +33,10 @@ module.exports = function (app) {
         var result = JSON.parse(response.body);
         var symbol = result['Global Quote']['01. symbol']
         var price = result['Global Quote']['05. price']
-        Stock.findOne({stock: symbol},(err,stock)=>{
+        var likeTotal = query.like ? 1 : 0
+        Stock.findOne({stock: symbol},function (err,stock){
           if (err) return res.json(err);
           if(!stock){
-            var likeTotal = query.like ? 1 : 0
             var newStock = new Stock({
               stock: symbol,
               price: price,
@@ -46,10 +46,17 @@ module.exports = function (app) {
               if (err) return res.json(err)
             })
             var stockObj = {stockData: newStock}
+            res.json(stockObj);
           } else {
-            st
+            if (query.like && stock.likes === 0){
+              stock.likes = 1;
+            }
+            stock.price = price;
+            stock.save((err,updated)=>{
+              if (err) return res.json(err)
+              res.json({stockData: stock});
+            })
           }
-          
         })
       })
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo

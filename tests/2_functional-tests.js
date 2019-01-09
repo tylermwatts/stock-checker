@@ -48,7 +48,10 @@ suite('Functional Tests', function() {
       });
       
       test('1 stock with like again (ensure likes arent double counted)', function(done) {
-        
+        chai.request(server)
+          .get('/api/stock-prices')
+          .query()
+          .end()
       });
       
       test('2 stocks', function(done) {
