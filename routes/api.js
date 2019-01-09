@@ -18,21 +18,20 @@ mongoose.connect(process.env.DB, {useNewUrlParser: true});
 module.exports = function (app) {
   function getStockJson(stock){
     request('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY, function(err,res){
-      if (err) return JSON.stringify({error: err})
-      return JSON.parse(res.body);
+      if (err) return JSON.stringify(err)
+      var stringifiedJson = JSON.parse(res.body);
+      return stringifiedJson;
     })
   }
 
   app.route('/api/stock-prices')
     .get(function (req, res){
       var query = req.query;
-      console.log(query);
-      var result = getStockJson(query.stock);
-      console.log(result);
+      var result = getStockJson(query.stock)
       var returnObj = {stockData: {stock: result['Global Quote']['01. symbol'], price: result['Global Quote']['05. price']}}
       req.query.like ? returnObj.stockData.likes = 1 : returnObj.stockData.likes = 0
       res.json(returnObj);
-      // https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
-    });
+    })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
+    
     
 };
