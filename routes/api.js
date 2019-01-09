@@ -28,7 +28,7 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(function (req, res){
       var query = req.query;
-      if (query.stock.isArray){
+      if (Array.isArray(query.stock)){
         console.log('double stock');
       } else {
       var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+query.stock+'&apikey='+process.env.API_KEY
