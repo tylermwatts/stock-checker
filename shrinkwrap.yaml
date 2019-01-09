@@ -8,7 +8,7 @@ dependencies:
   mocha: 5.2.0
   mongodb: 3.1.10
   mongoose: 5.4.2
-  request-promise: 4.2.2
+  request: 2.88.0
   zombie: 6.1.4
 packages:
   /@types/chai/4.1.7:
@@ -767,12 +767,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk=
-  /ip-regex/3.0.0:
-    dev: false
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-T8wDtjy+Qf2TAPDQmBp0eGKJ8GavlWlUnamr3wRn6vvdZlKVuJXXMlSncYFRYgVHOM3If5NR1H4+OvVQU9Idvg==
   /ipaddr.js/1.8.0:
     dev: false
     engines:
@@ -1225,16 +1219,6 @@ packages:
     dev: false
     resolution:
       integrity: sha1-p8LgmJH9vzj7sQ03b7cwA+aKxYk=
-  /request-promise-core/1.1.1:
-    dependencies:
-      lodash: 4.17.11
-    dev: false
-    engines:
-      node: '>=0.10.0'
-    peerDependencies:
-      request: ^2.34
-    resolution:
-      integrity: sha1-Pu4AssWqgyOc+wTFcA2jb4HNCLY=
   /request-promise-core/1.1.1/request@2.88.0:
     dependencies:
       lodash: 4.17.11
@@ -1261,19 +1245,6 @@ packages:
       request: ^2.34
     resolution:
       integrity: sha1-UoF3D2jgyXGeUWP9P6tIIhX0/aU=
-  /request-promise/4.2.2:
-    dependencies:
-      bluebird: 3.5.3
-      request-promise-core: 1.1.1
-      stealthy-require: 1.1.1
-      tough-cookie: 3.0.0
-    dev: false
-    engines:
-      node: '>=0.10.0'
-    peerDependencies:
-      request: ^2.34
-    resolution:
-      integrity: sha1-0epG1lSm7k+O5qT+oQGMIpEZBLQ=
   /request/2.88.0:
     dependencies:
       aws-sign2: 0.7.0
@@ -1485,16 +1456,6 @@ packages:
       node: '>=0.8'
     resolution:
       integrity: sha512-nlLsUzgm1kfLXSXfRZMc1KLAugd4hqJHDTvc2hDIwS3mZAfMEuMbc03SujMF+GEcpaX/qboeycw6iO8JwVv2+g==
-  /tough-cookie/3.0.0:
-    dependencies:
-      ip-regex: 3.0.0
-      psl: 1.1.31
-      punycode: 2.1.1
-    dev: false
-    engines:
-      node: '>=6'
-    resolution:
-      integrity: sha512-LHMvg+RBP/mAVNqVbOX8t+iJ+tqhBA/t49DuI7+IDAWHrASnesqSu1vWbKB7UrE2yk+HMFUBMadRGMkB4VCfog==
   /tr46/1.0.1:
     dependencies:
       punycode: 2.1.1
@@ -1680,5 +1641,5 @@ specifiers:
   mocha: ^5.2.0
   mongodb: ^3.1.10
   mongoose: ^5.4.2
-  request-promise: ^4.2.2
+  request: ^2.88.0
   zombie: ^6.1.4
