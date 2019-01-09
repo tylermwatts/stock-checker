@@ -35,15 +35,22 @@ module.exports = function (app) {
         var price = result['Global Quote']['05. price']
         Stock.findOne({stock: symbol},(err,stock)=>{
           if (err) return res.json(err);
-          if (stock){
-            stock.price = price
+          if(!stock){
+            var likeTotal = query.like ? 1 : 0
+            var newStock = new Stock({
+              stock: symbol,
+              price: price,
+              likes: likeTotal
+            })
+            newStock.save((err)=>{
+              if (err) return res.json(err)
+            })
+            var stockObj = {stockData: newStock}
+          } else {
+            st
           }
-          var stockObj = {stockData: {stock: symbol, price: price}}
-
+          
         })
-        query.like ? stockObj.stockData.likes = 1 : stockObj.stockData.likes = 0;
-        
-        res.json(stockObj);
       })
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
