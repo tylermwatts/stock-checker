@@ -70,13 +70,15 @@ module.exports = function (app) {
             return res.json(stockData);
           } else {
             stock.price = fetchData.price;
-            if (stock.ip !== 
-            return stock.save((err,data)=>{
-              if (err) return res.json({error: err})
-              
-              var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
-              return res.json(stockReturn);
-            })
+            if (stock.ip !== fetchData.ip && query.like){
+              stock.likes += 1;
+            } else {
+              return stock.save((err,data)=>{
+                if (err) return res.json({error: err})
+                var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
+                return res.json(stockReturn);
+              })
+            }
           }
         })
         } catch (err){
@@ -84,7 +86,6 @@ module.exports = function (app) {
         }
         
       }
-      
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
     
