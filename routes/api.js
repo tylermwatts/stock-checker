@@ -24,6 +24,13 @@ const stockSchema = mongoose.Schema({
 const Stock = mongoose.model('Stock', stockSchema);
 
 module.exports = function (app) {
+  
+  const getStockPrice = function(stock){
+    var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY;
+    request.get(url, function(err, response, body){
+      
+    })
+  }
 
   app.route('/api/stock-prices')
     .get(function (req, res){
