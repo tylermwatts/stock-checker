@@ -54,9 +54,25 @@ module.exports = function (app) {
       if (query.stock.isArray){
         console.log('double stock');
       } else {
-        var jsonresult = await getStockData(query.stock);
-        console.log(jsonresult);
-      
+        try {
+        var fetchData = await getStockData(query.stock);
+        Stock.findOne({stock: fetchData.stock}, (err,stock)=>{
+          if (err) res.json({error: err})
+          if (!stock){
+            req.query.like ? fetchData.likes = 1 : fetchData.likes = 0
+            return res.json(createNewStock(fetchData));
+          } else {
+            req.query.like ? stock.likes === 1 ? stock.likes = 1 : stock.likes = 1 : stock.likes = 0
+            stock.price = fetchData.price;
+            return stock.save((err,data)=>{
+              if (err) return res.json({error: err})
+              return res.json(data);
+            })
+          }
+        })
+        } catch (err){
+          console.log(err)
+        }
         
       }
       
