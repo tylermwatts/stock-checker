@@ -50,8 +50,7 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
-      var reqIp = req.headers['x-forwarded-for'];
-      console.log(reqIp);
+      console.log(req);
       var query = req.query;
       if (query.stock.isArray){
         console.log('double stock');
