@@ -51,7 +51,7 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
-      console.log(req.ipInfo);
+      console.log(req.connection.remoteAddress);
       var query = req.query;
       if (query.stock.isArray){
         console.log('double stock');
