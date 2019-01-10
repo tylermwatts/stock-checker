@@ -31,7 +31,21 @@ module.exports = function (app) {
       .then(response=>{
         return response.json()
       })
-      .then(theJson)
+      .then(theJson=>{
+        return ({stock: theJson['Global Quote']['01. symbol'], price: theJson['Global Quote']['05. price']})
+      })
+  }
+  
+  function createNewStock(stockObj){
+    var newStock = new Stock({
+      stock: stockObj.stock,
+      price: stockObj.price,
+      likes: stockObj.likes
+    })
+    newStock.save((err,data)=>{
+      if (err) return {error: err}
+      return data;
+    })
   }
 
   app.route('/api/stock-prices')
@@ -41,7 +55,7 @@ module.exports = function (app) {
         console.log('double stock');
       } else {
         var jsonresult = await getStockData(query.stock);
-        console.log(jsonresult['Global Quote']);
+        console.log(jsonresult);
       
         
       }
