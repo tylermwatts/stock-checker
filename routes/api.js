@@ -70,9 +70,10 @@ module.exports = function (app) {
             return res.json(stockData);
           } else {
             stock.price = fetchData.price;
-            if (fetchData.ip
+            if (stock.ip !== 
             return stock.save((err,data)=>{
               if (err) return res.json({error: err})
+              
               var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
               return res.json(stockReturn);
             })
