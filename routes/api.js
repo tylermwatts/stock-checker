@@ -19,7 +19,8 @@ mongoose.connect(process.env.DB, {useNewUrlParser: true});
 const stockSchema = mongoose.Schema({
   stock: {type: String, required: true},
   price: {type: String, required: true},
-  likes: {type: Number, required: true, default: 0}
+  likes: {type: Number, required: true, default: 0},
+  ip: {type: String, required: true}
 })
 
 const Stock = mongoose.model('Stock', stockSchema);
@@ -41,7 +42,8 @@ module.exports = function (app) {
     var newStock = new Stock({
       stock: stockObj.stock,
       price: stockObj.price,
-      likes: stockObj.likes
+      likes: stockObj.likes,
+      ip: stockObj.ip,
     })
     newStock.save((err,data)=>{
       if (err) return {error: err}
@@ -58,17 +60,21 @@ module.exports = function (app) {
       } else {
         try {
         var fetchData = await getStockData(query.stock);
-        console.log(fetchData)
+        fetchData.ip = req.connection.remoteAddress;
         Stock.findOne({stock: fetchData.stock}, (err,stock)=>{
           if (err) res.json({error: err})
           if (!stock){
             fetchData.likes = query.like ? 1 : 0
-            return res.json(createNewStock(fetchData));
+            var newStock = createNewStock(fetchData)
+            var stockData = {stockData: {stock: newStock.stock, price: newStock.price, likes: newStock.likes}}
+            return res.json(stockData);
           } else {
             stock.price = fetchData.price;
+            if (fetchData.ip
             return stock.save((err,data)=>{
               if (err) return res.json({error: err})
-              return res.json(data);
+              var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
+              return res.json(stockReturn);
             })
           }
         })
