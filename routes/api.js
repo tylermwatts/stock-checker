@@ -50,19 +50,21 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
+      var reqIp = req.headers['x-forwarded-for'];
+      console.log(reqIp);
       var query = req.query;
       if (query.stock.isArray){
         console.log('double stock');
       } else {
         try {
         var fetchData = await getStockData(query.stock);
+        console.log(fetchData)
         Stock.findOne({stock: fetchData.stock}, (err,stock)=>{
           if (err) res.json({error: err})
           if (!stock){
-            req.query.like ? fetchData.likes = 1 : fetchData.likes = 0
+            fetchData.likes = query.like ? 1 : 0
             return res.json(createNewStock(fetchData));
           } else {
-            req.query.like ? stock.likes === 1 ? stock.likes = 1 : stock.likes = 1 : stock.likes = 0
             stock.price = fetchData.price;
             return stock.save((err,data)=>{
               if (err) return res.json({error: err})
