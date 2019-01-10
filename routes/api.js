@@ -47,7 +47,7 @@ module.exports = function (app) {
         Stock.findOne({stock: query.stock}, function(err,stock){
           if (err) return res.json({error: err});
           if (!stock){
-            var newStock = new 
+            var newStock = new Stock({})
           }
         })
       }
