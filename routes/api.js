@@ -27,10 +27,11 @@ module.exports = function (app) {
   
   function getStockData(stock){
     var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
-    return fetch(url).then(response=>{
-      var stockData = response.json()
-      return {stock: stockData['Global Quote']['01. symbol'], price: stockData['Global Quote']['05. price']}
-    })
+    return fetch(url)
+      .then(response=>{
+        return response.json()
+      })
+      .then(theJson)
   }
 
   app.route('/api/stock-prices')
@@ -40,7 +41,7 @@ module.exports = function (app) {
         console.log('double stock');
       } else {
         var jsonresult = await getStockData(query.stock);
-        console.log(jsonresult);
+        console.log(jsonresult['Global Quote']);
       
         
       }
