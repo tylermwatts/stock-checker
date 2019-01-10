@@ -38,11 +38,12 @@ module.exports = function (app) {
   }
 
   app.route('/api/stock-prices')
-    .get(function (req, res){
+    .get(async function (req, res){
       var query = req.query;
       if (Array.isArray(query.stock)){
         console.log('double stock');
       } else {
+        var stockData = await getStockPrice(query.stock)
         var likeTotal = query.like ? 1 : 0
         Stock.findOne({stock: query.stock}, function(err,stock){
           if (err) return res.json({error: err});
