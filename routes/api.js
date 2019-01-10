@@ -11,7 +11,7 @@
 var expect = require('chai').expect;
 var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
-var request = require('request');
+var fetch = require('node-fetch');
 
 mongoose.connect(process.env.DB, {useNewUrlParser: true});
 
@@ -24,46 +24,27 @@ const stockSchema = mongoose.Schema({
 const Stock = mongoose.model('Stock', stockSchema);
 
 module.exports = function (app) {
+  
+  function getStockData(stock){
+    var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
+    return fetch(url).then(response=>{
+      var stockData = response.json()
+      return {stock: stockData['Global Quote']['01. symbol'], price: stockData['Global Quote']['05. price']}
+    })
+  }
 
   app.route('/api/stock-prices')
-    .get(function (req, res){
+    .get(async function (req, res){
       var query = req.query;
       if (query.stock.isArray){
         console.log('double stock');
       } else {
-      var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+query.stock+'&apikey='+process.env.API_KEY
-      request.get(url, function(err, response, body){
-        if (err) return res.json({error: err});
-        var result = JSON.parse(response.body);
-        var symbol = result['Global Quote']['01. symbol']
-        var price = result['Global Quote']['05. price']
-        var likeTotal = query.like ? 1 : 0
-        Stock.findOne({stock: symbol},function (err,stock){
-          if (err) return res.json(err);
-          if(!stock){
-            var newStock = new Stock({
-              stock: symbol,
-              price: price,
-              likes: likeTotal
-            })
-            newStock.save((err)=>{
-              if (err) return res.json(err)
-            })
-            var stockObj = {stockData: newStock}
-            res.json(stockObj);
-          } else {
-            if (query.like && stock.likes === 0){
-              stock.likes = 1;
-            }
-            stock.price = price;
-            stock.save((err,updated)=>{
-              if (err) return res.json(err)
-              res.json({stockData: stock});
-            })
-          }
-        })
-      })
+        var jsonresult = await getStockData(query.stock);
+        console.log(jsonresult);
+      
+        
       }
+      
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
     
