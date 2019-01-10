@@ -12,6 +12,7 @@ var expect = require('chai').expect;
 var MongoClient = require('mongodb');
 var mongoose = require('mongoose');
 var fetch = require('node-fetch');
+var expressip = require('express-ip');
 
 mongoose.connect(process.env.DB, {useNewUrlParser: true});
 
@@ -50,7 +51,7 @@ module.exports = function (app) {
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
-      console.log(req);
+      console.log(req.ipInfo);
       var query = req.query;
       if (query.stock.isArray){
         console.log('double stock');

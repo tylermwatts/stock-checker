@@ -4,6 +4,7 @@ dependencies:
   chai-http: 4.2.1
   cors: 2.8.5
   express: 4.16.4
+  express-ip: 1.0.3
   helmet: 3.15.0
   mocha: 5.2.0
   mongodb: 3.1.10
@@ -188,6 +189,10 @@ packages:
       node: '>=0.6.19'
     resolution:
       integrity: sha512-9Aeai9TacfNtWXOYarkFJRW2CWo+dRon+fuLZYJmvLV3+MiUp0bEI6IAZfXEIg7/Pl/7IWlLaDnhzTsD81etQA==
+  /buffer-crc32/0.2.13:
+    dev: false
+    resolution:
+      integrity: sha1-DTM+PwDqxQqhRUq9MO+MKl2ackI=
   /bytes/3.0.0:
     dev: false
     engines:
@@ -233,6 +238,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=
+  /colors/1.3.3:
+    dev: false
+    engines:
+      node: '>=0.1.90'
+    resolution:
+      integrity: sha512-mmGt/1pZqYRjMxB1axhTo16/snVZ5krrKkcmMeVKxzECMMXoCgnvTPp10QgHfcbQZw8Dq2jMNG6je4JlWU0gWg==
   /combined-stream/1.0.7:
     dependencies:
       delayed-stream: 1.0.0
@@ -480,6 +491,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ngXzTfoRGG7fYens3/RMb6yYoVLvLMfmsSllP/mZPxNHgFq41TmPSLF/nLY7fwoclI2vElvAmILFWGUYqdjfCg==
+  /express-ip/1.0.3:
+    dependencies:
+      geoip-lite: 1.3.5
+    dev: false
+    resolution:
+      integrity: sha512-vnIvJnvDjBFt96cSLteIZ4gDCOsDjHu7cI/mxLKpnW4ovrt1nFX2e/LTANfAEfyQJMvrwul3t95MnnGEOZq1hA==
   /express/4.16.4:
     dependencies:
       accepts: 1.3.5
@@ -545,6 +562,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
+  /fd-slicer/1.1.0:
+    dependencies:
+      pend: 1.2.0
+    dev: false
+    resolution:
+      integrity: sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   /feature-policy/0.2.0:
     dev: false
     resolution:
@@ -601,6 +624,21 @@ packages:
     dev: false
     resolution:
       integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+  /geoip-lite/1.3.5:
+    dependencies:
+      async: 2.6.1
+      colors: 1.3.3
+      glob: 7.1.3
+      iconv-lite: 0.4.24
+      ip-address: 5.8.9
+      lazy: 1.0.11
+      rimraf: 2.6.3
+      yauzl: 2.10.0
+    dev: false
+    engines:
+      node: '>=5.10.0'
+    resolution:
+      integrity: sha512-QQUV4PC/7/eHhZU1//NZm5O6bmitACEqsoIa48Hmfh7FfUeweJJhLvM4Fw5okKlyhrBycMr2fe0v3KtlaEyHkQ==
   /get-func-name/2.0.0:
     dev: false
     resolution:
@@ -622,6 +660,17 @@ packages:
     dev: false
     resolution:
       integrity: sha512-MJTUg1kjuLeQCJ+ccE4Vpa6kKVXkPYJ2mOCQyUuKLcLQsdrMCpBPUi8qVE6+YuaJkozeA9NusTAw3hLr8Xe5EQ==
+  /glob/7.1.3:
+    dependencies:
+      fs.realpath: 1.0.0
+      inflight: 1.0.6
+      inherits: 2.0.3
+      minimatch: 3.0.4
+      once: 1.4.0
+      path-is-absolute: 1.0.1
+    dev: false
+    resolution:
+      integrity: sha512-vcfuiIxogLV4DlGBHIUOwI0IbrJ8HWPc4MU7HzviGeNho/UJDfi6B5p3sHeWIQ0KGIU0Jpxi5ZHxemQfLkkAwQ==
   /growl/1.10.5:
     dev: false
     engines:
@@ -761,6 +810,20 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
+  /ip-address/5.8.9:
+    dependencies:
+      jsbn: 1.1.0
+      lodash.find: 4.6.0
+      lodash.max: 4.0.1
+      lodash.merge: 4.6.1
+      lodash.padstart: 4.6.1
+      lodash.repeat: 4.1.0
+      sprintf-js: 1.1.0
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-7ay355oMN34iXhET1BmCJVsHjOTSItEEIIpOs38qUC23AIhOy+xIPnkrTuEFjeLMrTJ7m8KMXWgWfy/2Vn9sDw==
   /ip-regex/2.1.0:
     dev: false
     engines:
@@ -797,6 +860,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
+  /jsbn/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-sBMHyym2GKHtJux56RH4A8TaAEA=
   /jsdom/11.12.0:
     dependencies:
       abab: 2.0.0
@@ -855,6 +922,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-6hHxsp9e6zQU8nXsP+02HGWXwTkOEw6IROhF2ZA28cYbUk4eJ6QbtZvdqZOdD9YPKghG3apk5eOCvs+tLl3lRg==
+  /lazy/1.0.11:
+    dev: false
+    engines:
+      node: '>=0.2.0'
+    resolution:
+      integrity: sha1-2qBoIGKCVCwIgojpdcKXwa53tpA=
   /left-pad/1.3.0:
     dev: false
     resolution:
@@ -868,6 +941,26 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha1-OwmSTt+fCDwEkP3UwLxEIeBHZO4=
+  /lodash.find/4.6.0:
+    dev: false
+    resolution:
+      integrity: sha1-ywcE1Hq3F4n/oN6Ll92Sb7iLE7E=
+  /lodash.max/4.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-hzVWbGGLNan3YFILSHrnllivE2o=
+  /lodash.merge/4.6.1:
+    dev: false
+    resolution:
+      integrity: sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
+  /lodash.padstart/4.6.1:
+    dev: false
+    resolution:
+      integrity: sha1-0uPuv/DZ05rVD1y9G1KnvOa7YRs=
+  /lodash.repeat/4.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-/H3oEx2MisB+S0n3T/6CnR8r7EQ=
   /lodash.sortby/4.7.0:
     dev: false
     resolution:
@@ -1123,6 +1216,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
+  /pend/1.2.0:
+    dev: false
+    resolution:
+      integrity: sha1-elfrVQpng/kRUzH89GY9XI4AelA=
   /performance-now/2.1.0:
     dev: false
     resolution:
@@ -1295,6 +1392,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-lICrIOlP+h2egKgEx+oUdhGWa1c=
+  /rimraf/2.6.3:
+    dependencies:
+      glob: 7.1.3
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   /safe-buffer/5.1.2:
     dev: false
     resolution:
@@ -1374,6 +1478,10 @@ packages:
     optional: true
     resolution:
       integrity: sha1-/0rm5oZWBWuks+eSqzM004JzyhE=
+  /sprintf-js/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-z/yvcC2vZeo5u04PorKZzsGhvkY=
   /sshpk/1.16.0:
     dependencies:
       asn1: 0.2.4
@@ -1615,6 +1723,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
+  /yauzl/2.10.0:
+    dependencies:
+      buffer-crc32: 0.2.13
+      fd-slicer: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha1-x+sXyT4RLLEIb6bY5R+wZnt5pfk=
   /zombie/6.1.4:
     dependencies:
       babel-runtime: 6.26.0
@@ -1643,6 +1758,7 @@ specifiers:
   chai-http: ^4.2.1
   cors: ^2.8.5
   express: ^4.16.4
+  express-ip: ^1.0.3
   helmet: ^3.15.0
   mocha: ^5.2.0
   mongodb: ^3.1.10

@@ -5,6 +5,7 @@ var bodyParser  = require('body-parser');
 var expect      = require('chai').expect;
 var cors        = require('cors');
 var helmet      = require('helmet');
+var expressip   = require('express-ip');
 
 var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -19,6 +20,7 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet.contentSecurityPolicy({directives: {defaultSrc: ["'self'"], scriptSrc: ["'self'", 'trusted-cdn.com']}}))
+app.use(expressip().getIpInfoMiddleware);
 
 //Index page (static HTML)
 app.route('/')
