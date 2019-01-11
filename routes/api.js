@@ -76,21 +76,24 @@ module.exports = function (app) {
     .get(async function (req, res){
       var query = req.query;
       var boolToPass = query.like ? true : false
-      if (query.stock.isArray){
-        var stock1 = await getStockData(query.stock[0]);
-        var stock2 = await getStockData(query.stock[1]);
-        stock1.ip = req.connection.remoteAddress;
-        stock2.ip = req.connection.remoteAddress;
-        var stockObj1 = stockSearch(stock1, boolToPass);
-        var stockObj2 = stockSearch(stock2, boolToPass);
-        return res.json({stockData: [stockObj1, stockObj2]});        
-      } else {
-        var fetchData = await getStockData(query.stock);
-        fetchData.ip = req.connection.remoteAddress;
-        var stockDoc = stockSearch(fetchData, boolToPass);
-        return res.json({stockData: stockDoc});
+      try{
+        if (query.stock.isArray){
+          var stock1 = await getStockData(query.stock[0]);
+          var stock2 = await getStockData(query.stock[1]);
+          stock1.ip = req.connection.remoteAddress;
+          stock2.ip = req.connection.remoteAddress;
+          var stockObj1 = stockSearch(stock1, boolToPass);
+          var stockObj2 = stockSearch(stock2, boolToPass);
+          return res.json({stockData: [stockObj1, stockObj2]});        
+        } else {
+          var fetchData = await getStockData(query.stock);
+          fetchData.ip = req.connection.remoteAddress;
+          var stockDoc = stockSearch(fetchData, boolToPass);
+          return res.json({stockData: stockDoc});
+        }
+      } catch (err){
+        res.json(err)
       }
-    
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
     
