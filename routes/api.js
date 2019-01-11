@@ -51,23 +51,21 @@ module.exports = function (app) {
     })
   }
   
-  function stockSearch(stockToSearch){
+  function stockSearch(stockToSearch, bool){
     Stock.findOne({stock: stockToSearch.stock}, (err,stock)=>{
       if (err) return ({error: err})
           if (!stock){
-            stockToSearch.likes = query.like ? 1 : 0
-            var newStock = createNewStock(fetchData)
-            var stockData = {stockData: {stock: newStock.stock, price: newStock.price, likes: newStock.likes}}
-            return res.json(stockData);
+            stockToSearch.likes = bool ? 1 : 0
+            var newStock = createNewStock(stockToSearch)
+            return {stock: newStock.stock, price: newStock.price, likes: newStock.likes}
           } else {
-            stock.price = fetchData.price;
-            if (stock.ip !== fetchData.ip && query.like){
+            stock.price = stockToSearch.price;
+            if (stock.ip !== stockToSearch.ip && bool){
               stock.likes += 1;
             } else {
               return stock.save((err,data)=>{
-                if (err) return res.json({error: err})
-                var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
-                return res.json(stockReturn);
+                if (err) return ({error: err})
+                return {stock: data.stock, price: data.price, likes: data.likes}
               })
             }
           }
@@ -81,33 +79,15 @@ module.exports = function (app) {
       if (query.stock.isArray){
         var stock1 = await getStockData(query.stock[0]);
         var stock2 = await getStockData(query.stock[1]);
+        stock1.ip = req.connection.remoteAddress;
+        stock2.ip = req.connection.remoteAddress;
+        var stockObj1 = stockSearch(stock1, query.like);
+        var stockObj2 = stockSearch(stock2, query.like);
+        return {stockData: [stockObj1, stockObj2]};        
       } else {
-        try {
         var fetchData = await getStockData(query.stock);
         fetchData.ip = req.connection.remoteAddress;
-        Stock.findOne({stock: fetchData.stock}, (err,stock)=>{
-          if (err) res.json({error: err})
-          if (!stock){
-            fetchData.likes = query.like ? 1 : 0
-            var newStock = createNewStock(fetchData)
-            var stockData = {stockData: {stock: newStock.stock, price: newStock.price, likes: newStock.likes}}
-            return res.json(stockData);
-          } else {
-            stock.price = fetchData.price;
-            if (stock.ip !== fetchData.ip && query.like){
-              stock.likes += 1;
-            } else {
-              return stock.save((err,data)=>{
-                if (err) return res.json({error: err})
-                var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
-                return res.json(stockReturn);
-              })
-            }
-          }
-        })
-        } catch (err){
-          console.log(err)
-        }
+        var stockDoc = stockSearch(fetchData, query.like);
         
       }
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
