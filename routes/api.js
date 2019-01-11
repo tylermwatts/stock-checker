@@ -50,13 +50,37 @@ module.exports = function (app) {
       return data;
     })
   }
+  
+  function stockSearch(stockToSearch){
+    Stock.findOne({stock: stockToSearch.stock}, (err,stock)=>{
+      if (err) return ({error: err})
+          if (!stock){
+            stockToSearch.likes = query.like ? 1 : 0
+            var newStock = createNewStock(fetchData)
+            var stockData = {stockData: {stock: newStock.stock, price: newStock.price, likes: newStock.likes}}
+            return res.json(stockData);
+          } else {
+            stock.price = fetchData.price;
+            if (stock.ip !== fetchData.ip && query.like){
+              stock.likes += 1;
+            } else {
+              return stock.save((err,data)=>{
+                if (err) return res.json({error: err})
+                var stockReturn = {stockData: {stock: data.stock, price: data.price, likes: data.likes}}
+                return res.json(stockReturn);
+              })
+            }
+          }
+        })
+  }
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
       console.log(req.connection.remoteAddress);
       var query = req.query;
       if (query.stock.isArray){
-        console.log('double stock');
+        var stock1 = await getStockData(query.stock[0]);
+        var stock2 = await getStockData(query.stock[1]);
       } else {
         try {
         var fetchData = await getStockData(query.stock);
