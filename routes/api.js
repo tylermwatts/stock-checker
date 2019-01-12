@@ -28,14 +28,21 @@ const Stock = mongoose.model('Stock', stockSchema);
 module.exports = function (app) {
   
   function getStockData(stock){
-    var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
-    return fetch(url)
-      .then(response=>{
-        return response.json()
-      })
-      .then(theJson=>{
-        return ({stock: theJson['Global Quote']['01. symbol'], price: theJson['Global Quote']['05. price']})
-      })
+    if (Array.isArray(stock)){
+      var url1 = ''
+      var url2 = ''
+      Promise.all([url1,url2])
+        .then(data => )
+    } else {
+      var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
+      return fetch(url)
+        .then(response=>{
+          return response.json()
+        })
+        .then(theJson=>{
+          return ({stock: theJson['Global Quote']['01. symbol'], price: theJson['Global Quote']['05. price']})
+        })
+    }
   }
   
   function createNewStock(stockObj){
