@@ -139,6 +139,7 @@ module.exports = function (app) {
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
                 ]})
             } else {
+              console.log('stocks exist');
               stocks[0].price = stockArr[0].price
               stocks[1].price = stockArr[1].price
               if (likeBool){
