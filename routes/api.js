@@ -31,13 +31,13 @@ module.exports = function (app) {
     if (Array.isArray(stock)){
       var url1 = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock[0]}&apikey=${process.env.API_KEY}`
       var url2 = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock[1]}&apikey=${process.env.API_KEY}`
-      Promise
+      return Promise
         .all([url1,url2]
              .map(url=>fetch(url)
                   .then(response=> response.json())))
         .then(data=>{
           return [{stock: data[0]['Global Quote']['01. symbol'], price: data[0]['Global Quote']['05. price']},
-                  {stock: data[1]['Global Quote']['01. symbol'], price: data[1]['Global Quote']['05. price']}]
+                  {stock: data[1]['Global Quote']['01. symbol'], price: data[1]['Global Quote']['05. price']}];
         })
     } else {
       var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
@@ -63,35 +63,17 @@ module.exports = function (app) {
       return data;
     })
   }
-  
-  function stockSearch(stockToSearch, bool){
-    Stock.findOne({stock: stockToSearch.stock}, function(err,stock){
-      if (err) return ({error: err});
-        if (!stock){
-          stockToSearch.likes = bool ? 1: 0
-          var createdStock = createNewStock(stockToSearch);
-          return ({stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes})
-        } else {
-          stock.price = stockToSearch.price;
-          if (stock.ip !== stockToSearch.ip && bool === true){
-            stock.likes++;
-          }
-          console.log(stock);
-          return ({stock: stock.stock, price: stock.price, likes: stock.likes})
-        }
-    })
-  }
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
       var query = req.query;
       var likeBool = query.like ? true : false
-        if (query.stock.isArray){
+        if (Array.isArray(query.stock)){
           try {
             var stockArr = await getStockData(query.stock);
-            console.log(stockArr)
+            console.log(stockArr);
           } catch (err){return err}
-          var stock2 = await getStockData(query.stock[1]);
+          
         } else {
           try {
             var fetchData = await getStockData(query.stock);
