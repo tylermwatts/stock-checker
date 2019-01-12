@@ -62,7 +62,7 @@ module.exports = function (app) {
           var ip = req.connection.remoteAddress;
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
             console.log(stocks)
-            if (!stocks){
+            if (!stocks || stocks === undefined){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
@@ -146,18 +146,19 @@ module.exports = function (app) {
                 price: fetchData.price,
                 likes: likeBool ? 1 : 0,
                 ip: ip,
-              }).save((err,data)=>{
+              })
+              createdStock.save((err,data)=>{
                 if (err) return res.json({error: err})
-                return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
+                return done(null, res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}}))
               })
             } else {
+              stock.price = fetchData.price;
+              if (stock.ip !== fetchData.ip && likeBool){
+                stock.likes += 1;
+              }
               stock.save((err,data)=>{
                 if (err) return res.json({error: err})
-                data.price = fetchData.price
-                if (stock.ip !== fetchData.ip && likeBool === true){
-                stock.likes++;
-              }
-              return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
+                return done(null, res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}}))
               })
             }
           })
