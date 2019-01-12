@@ -61,7 +61,6 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
-            console.log(stocks)
             if (stocks === undefined){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
