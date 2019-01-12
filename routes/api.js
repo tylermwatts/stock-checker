@@ -85,7 +85,13 @@ module.exports = function (app) {
                 {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
                 {stock: stock2.stock, price: stock2.price, rel_likes: stock2.likes - stock1.likes}
               ]}))
-            } else if(stockArr[0].stock !== stocks[0].stock && stockArr[0].stock !== stocks[1].stock){
+            } else if(stocks.length === 1 && stocks[0].stock !== stockArr[0].stock){
+              if (stocks[0].stock === stockArr[1].stock){
+                stocks[0].price = stockArr[1].price;
+                stocks[0].save(err=>{
+                  if (err) return res.json({error: err})
+                })
+              }
               var newStock = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
@@ -99,10 +105,12 @@ module.exports = function (app) {
                   {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes},
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
                 ]}))
-            } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
-              stocks[0].price = stockArr[0].price
-              if (likeBool && ip !== stocks[0].ip){
-                stocks[0].likes += 1;
+            } else if (stocks.length === 1 && stocks[0].stock !== stockArr[1].stock){
+              if (stocks[0].stock === stockArr[0].stock){
+                stocks[0].price = stockArr[0].price;
+                stocks[0].save(err=>{
+                  if (err) return res.json({error: err})
+                })
               }
               var newStock = new Stock({
                 stock: stockArr[1].stock,
@@ -114,13 +122,12 @@ module.exports = function (app) {
                 if (err) return err
               })
               return done(null, res.json({stockData: [
-                 {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes},
-                 {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes}
-               ]}))
-            }
-            else {
-              // stocks[0].price = stockArr[0].price
-              // stocks[1].price = stockArr[1].price
+                  {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes},
+                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
+                ]}))
+            } else {
+              stocks[0].price = stockArr[0].price
+              stocks[1].price = stockArr[1].price
               if (likeBool){
                 console.log('like passed as true');
                 if (stocks[0].ip !== ip){
