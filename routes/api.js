@@ -73,7 +73,8 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           var ip = req.connection.remoteAddress;
-          Stock.find({ $or: [{stock: stockArr[0].stock}, {stock: stockArr[1]}]},function(err, stocks){
+          Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
+            console.log(stocks)
             if (!stocks){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
@@ -97,6 +98,8 @@ module.exports = function (app) {
                 {stock: stock1.stock, price: stock1.price, likes: stock1.likes},
                 {stock: stock2.stock, price: stock2.price, likes: stock2.likes}
               ]})
+            } else {
+              
             }
           })
         } else {
