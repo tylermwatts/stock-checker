@@ -50,19 +50,6 @@ module.exports = function (app) {
         })
     }
   }
-  
-  function createNewStock(stockObj){
-    var newStock = new Stock({
-      stock: stockObj.stock,
-      price: stockObj.price,
-      likes: stockObj.likes,
-      ip: stockObj.ip,
-    })
-    return newStock.save((err,data)=>{
-      if (err) return {error: err}
-      return data;
-    })
-  }
 
   app.route('/api/stock-prices')
     .get(async function (req, res){
@@ -151,7 +138,7 @@ module.exports = function (app) {
             var fetchData = await getStockData(query.stock);
           } catch(err){res.json({error: err})}
           var ip = req.connection.remoteAddress;
-          Stock.findOne({stock: fetchData.stock}, function(err,stock){
+          Stock.findOne({stock: query.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
               var createdStock = new Stock({
@@ -160,14 +147,18 @@ module.exports = function (app) {
                 likes: likeBool ? 1 : 0,
                 ip: ip,
               }).save((err,data)=>{
+                if (err) return res.json({error: err})
                 return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
               })
             } else {
-              stock.price = fetchData.price;
-              if (stock.ip !== fetchData.ip && likeBool === true){
+              stock.save((err,data)=>{
+                if (err) return res.json({error: err})
+                data.price = fetchData.price
+                if (stock.ip !== fetchData.ip && likeBool === true){
                 stock.likes++;
               }
               return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
+              })
             }
           })
         }
