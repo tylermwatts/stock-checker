@@ -75,7 +75,7 @@ module.exports = function (app) {
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip
+                ip: [ip]
               })
               stock2.save(err=>{
                 if (err) return err;
@@ -87,6 +87,12 @@ module.exports = function (app) {
             } else if(stocks.length === 1 && stocks[0].stock !== stockArr[0].stock){
               if (stocks[0].stock === stockArr[1].stock){
                 stocks[0].price = stockArr[1].price;
+                if (likeBool){
+                  if (!stocks[0].ip.includes(ip)){
+                    stocks[0].ip.push(ip)
+                    stocks[0].likes += 1;
+                  }
+                }
                 stocks[0].save(err=>{
                   if (err) return res.json({error: err})
                 })
@@ -95,7 +101,7 @@ module.exports = function (app) {
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
-                ip: ip
+                ip: [ip]
               })
               newStock.save(err=>{
                 if (err) return err
@@ -107,6 +113,12 @@ module.exports = function (app) {
             } else if (stocks.length === 1 && stocks[0].stock !== stockArr[1].stock){
               if (stocks[0].stock === stockArr[0].stock){
                 stocks[0].price = stockArr[0].price;
+                if (likeBool){
+                  if (!stocks[0].ip.includes(ip)){
+                    stocks[0].ip.push(ip)
+                    stocks[0].likes += 1;
+                  }
+                }
                 stocks[0].save(err=>{
                   if (err) return res.json({error: err})
                 })
@@ -115,7 +127,7 @@ module.exports = function (app) {
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
-                ip: ip
+                ip: [ip]
               })
               newStock.save(err=>{
                 if (err) return err
@@ -129,10 +141,12 @@ module.exports = function (app) {
               stocks[1].price = stockArr[1].price
               if (likeBool){
                 console.log('like passed as true');
-                if (stocks[0].ip !== ip){
+                if (!stocks[0].ip.includes(ip)){
+                  stocks[0].ip.push(ip)
                   stocks[0].likes += 1;
                 }
-                if (stocks[1].ip !== ip){
+                if (!stocks[1].ip.includes(ip)){
+                  stocks[0].ip.push(ip)
                   stocks[1].likes += 1;
                 }
               }
@@ -159,7 +173,7 @@ module.exports = function (app) {
                 stock: fetchData.stock,
                 price: fetchData.price,
                 likes: likeBool ? 1 : 0,
-                ip: ip
+                ip: [ip]
               })
               createdStock.save(err=>{
                 if (err) return res.json({error: err})
@@ -168,7 +182,8 @@ module.exports = function (app) {
             } else {
               stock.price = fetchData.price;
               if (likeBool){
-                if (stock.ip !== ip){
+                if (!stock.ip.includes(ip)){
+                  stock.ip.push(ip)
                   stock.likes += 1;
                 }
               }
