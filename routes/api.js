@@ -52,7 +52,7 @@ module.exports = function (app) {
   }
 
   app.route('/api/stock-prices')
-    .get(async function (req, res){
+    .get(async function (req, res, done){
       var query = req.query;
       var likeBool = query.like || false
         if (Array.isArray(query.stock)){
@@ -81,10 +81,10 @@ module.exports = function (app) {
                 if (err) return err;
                 return data;
               }) 
-              return res.json({stockData: [
+              return done(null, res.json({stockData: [
                 {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
                 {stock: stock2.stock, price: stock2.price, rel_likes: stock2.likes - stock1.likes}
-              ]})
+              ]}))
             } else if(stocks[0].stock !== stockArr[0].stock && stocks[0].stock === stockArr[1].stock){
               stocks[0].price = stockArr[1].price
               if (likeBool && ip !== stocks[0].ip){
@@ -97,10 +97,10 @@ module.exports = function (app) {
                 ip: ip
               }).save((err,data)=>{
                 if (err) return err
-                return res.json({stockData: [
+                return done(null, res.json({stockData: [
                   {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes},
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes}
-                ]})
+                ]}))
               })
             } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
               stocks[0].price = stockArr[0].price
@@ -114,10 +114,10 @@ module.exports = function (app) {
                 ip: ip
               }).save((err,data)=>{
                 if (err) return err
-                return res.json({stockData: [
+                return done(null, res.json({stockData: [
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes},
                   {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes}
-                ]})
+                ]}))
               })
             }
             else {
@@ -127,10 +127,10 @@ module.exports = function (app) {
                 stocks[0].likes++;
                 stocks[1].likes++;
               }
-              return res.json({stockData: [
+              return done(null, res.json({stockData: [
                 {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - stocks[1].likes},
                 {stock: stocks[1].stock, price: stocks[1].price, rel_likes: stocks[1].likes - stocks[0].likes}
-              ]})
+              ]}))
             }
           })
         } else {
@@ -138,7 +138,7 @@ module.exports = function (app) {
             var fetchData = await getStockData(query.stock);
           } catch(err){res.json({error: err})}
           var ip = req.connection.remoteAddress;
-          Stock.findOne({stock: query.stock}, function(err,stock){
+          Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
               var createdStock = new Stock({
