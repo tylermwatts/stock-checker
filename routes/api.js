@@ -61,7 +61,6 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
-            console.log(stocks)
             if (stocks === undefined){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
@@ -87,7 +86,7 @@ module.exports = function (app) {
               ]}))
             } else if(stocks[0].stock !== stockArr[0].stock && stocks[0].stock === stockArr[1].stock){
               stocks[0].price = stockArr[1].price
-              if (likeBool && ip !== stocks[0].ip){
+              if (likeBool && ip != stocks[0].ip){
                 stocks[0].likes++;
               }
               var newStock = new Stock({
@@ -105,7 +104,7 @@ module.exports = function (app) {
                 ]}))
             } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
               stocks[0].price = stockArr[0].price
-              if (likeBool && ip !== stocks[0].ip){
+              if (likeBool && ip != stocks[0].ip){
                 stocks[0].likes++;
               }
               var newStock = new Stock({
@@ -125,7 +124,7 @@ module.exports = function (app) {
             else {
               stocks[0].price = stockArr[0].price
               stocks[1].price = stockArr[1].price
-              if (likeBool && ip !== stocks[0].ip && ip !== stocks[1].ip){
+              if (likeBool && ip != stocks[0].ip && ip != stocks[1].ip){
                 stocks[0].likes++;
                 stocks[1].likes++;
               }
@@ -146,7 +145,6 @@ module.exports = function (app) {
             var fetchData = await getStockData(query.stock);
           } catch(err){res.json({error: err})}
           Stock.findOne({stock: fetchData.stock}, function(err,stock){
-            console.log(stock)
             if (err) res.json({error: err});
             if (!stock){
               var createdStock = new Stock({
@@ -160,10 +158,11 @@ module.exports = function (app) {
               })
               return done(null, res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}}))
             } else {
-              console.log(stock)
               stock.price = fetchData.price;
-              if (stock.ip !== fetchData.ip && likeBool){
-                stock.likes += 1;
+              if (likeBool){
+                if (stock.ip !== ip){
+                  stock.likes += 1;
+                }
               }
               stock.save(err=>{
                 if (err) return res.json({error: err})
