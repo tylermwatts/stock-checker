@@ -74,16 +74,27 @@ module.exports = function (app) {
       var query = req.query;
       var likeBool = query.like ? true : false
         if (query.stock.isArray){
-          var stock1 = await getStockData(query.stock[0]);
-          console.log(stock1)
+          try {
+            var stock1 = await getStockData(query.stock[0]);
+            console.log(stock1)
+          } catch (err){return err}
+          var stock2 = await getStockData(query.stock[1]);
         } else {
-          var fetchData = await getStockData(query.stock);
+          try {
+            var fetchData = await getStockData(query.stock);
+          } catch(err){res.json({error: err})}
           fetchData.ip = req.connection.remoteAddress;
           Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
               fetchData.likes = likeBool ? 1: 0
-              var createdStock = createNewStock(fetchData);
+              var createdStock = new Stock({
+                stock: fetchData.stock,
+                price: fetchData.price,
+                likes: fetchData.likes,
+                ip: fetchData.ip,
+              })
+              console.log(createdStock)
               return res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}})
             } else {
               stock.price = fetchData.price;
