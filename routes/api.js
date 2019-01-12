@@ -73,7 +73,7 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           var ip = req.connection.remoteAddress;
-          var stockObj1 = Stock.findOne({stock: stockArr[0].stock},function(err, stock){
+          Stock.findOne({stock: stockArr[0].stock},function(err, stock){
             if (err) return res.json({error: err});
             if (!stock){
               var newStock1 = new Stock({
@@ -94,8 +94,7 @@ module.exports = function (app) {
               return ({stock: stock.stock, price: stock.price, likes: stock.likes})
             }
           })
-          console.log(stockObj1)
-          var stockObj2 = await Stock.findOne({stock: stockArr[1].stock},function(err, stock){
+          Stock.findOne({stock: stockArr[1].stock},function(err, stock){
             if (err) return res.json({error: err});
             if (!stock){
               var newStock2 = new Stock({
