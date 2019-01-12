@@ -40,7 +40,7 @@ module.exports = function (app) {
                   {stock: data[1]['Global Quote']['01. symbol'], price: data[1]['Global Quote']['05. price']}];
         })
     } else {
-      var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
+      var url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock}&apikey=${process.env.API_KEY}`
       return fetch(url)
         .then(response=>{
           return response.json()
@@ -54,14 +54,13 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(async function (req, res){
       var query = req.query;
-      console.log(query)
       const likeBool = query.like ? 'true' ? true : false : false
       var ip = req.connection.remoteAddress.slice(7);
         if (Array.isArray(query.stock)){
           try {
             var stockArr = await getStockData(query.stock);
             console.log(stockArr)
-            Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
+            Stock.find({stock: { $in: [query.stock[0].toUpperCase(), query.stock[1].toUpperCase()]}},function(err, stocks){
             console.log(stocks)
             if (stocks === undefined){
               let stock1 = new Stock({
