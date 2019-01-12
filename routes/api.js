@@ -52,7 +52,7 @@ module.exports = function (app) {
   }
 
   app.route('/api/stock-prices')
-    .get(async function (req, res, done){
+    .get(async function (req, res){
       var query = req.query;
       var likeBool = query.like || false
       var ip = req.connection.remoteAddress.slice(7);
@@ -80,10 +80,10 @@ module.exports = function (app) {
               stock2.save(err=>{
                 if (err) return err;
               }) 
-              return done(null, res.json({stockData: [
+              return res.json({stockData: [
                 {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
                 {stock: stock2.stock, price: stock2.price, rel_likes: stock2.likes - stock1.likes}
-              ]}))
+              ]})
             } else if(stocks.length === 1 && stocks[0].stock !== stockArr[0].stock){
               if (stocks[0].stock === stockArr[1].stock){
                 stocks[0].price = stockArr[1].price;
@@ -106,10 +106,10 @@ module.exports = function (app) {
               newStock.save(err=>{
                 if (err) return err
               })
-              return done(null, res.json({stockData: [
+              return res.json({stockData: [
                   {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes},
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
-                ]}))
+                ]})
             } else if (stocks.length === 1 && stocks[0].stock !== stockArr[1].stock){
               if (stocks[0].stock === stockArr[0].stock){
                 stocks[0].price = stockArr[0].price;
@@ -132,10 +132,10 @@ module.exports = function (app) {
               newStock.save(err=>{
                 if (err) return err
               })
-              return done(null, res.json({stockData: [
+              return res.json({stockData: [
                   {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes},
                   {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
-                ]}))
+                ]})
             } else {
               stocks[0].price = stockArr[0].price
               stocks[1].price = stockArr[1].price
@@ -156,10 +156,10 @@ module.exports = function (app) {
               stocks[1].save(err=>{
                 if (err) return res.json({error: err})
               })
-              return done(null, res.json({stockData: [
+              return res.json({stockData: [
                 {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - stocks[1].likes},
                 {stock: stocks[1].stock, price: stocks[1].price, rel_likes: stocks[1].likes - stocks[0].likes}
-              ]}))
+              ]})
             }
           })
         } else {
@@ -178,7 +178,7 @@ module.exports = function (app) {
               createdStock.save(err=>{
                 if (err) return res.json({error: err})
               })
-              return done(null, res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}}))
+              return res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}})
             } else {
               stock.price = fetchData.price;
               if (likeBool){
@@ -190,7 +190,7 @@ module.exports = function (app) {
               stock.save(err=>{
                 if (err) return res.json({error: err})
               })
-              return done(null, res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}}))
+              return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
             }
           })
         }
