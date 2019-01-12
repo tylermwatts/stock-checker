@@ -98,6 +98,22 @@ module.exports = function (app) {
                 {stock: stock1.stock, price: stock1.price, likes: stock1.likes},
                 {stock: stock2.stock, price: stock2.price, likes: stock2.likes}
               ]})
+            } else if(stocks[0] !== stockArr[0] && stocks[0] === stockArr[1]){
+              if (likeBool && ip !== stocks[0].ip){
+                stocks[0].likes++;
+              }
+              var newStock = new Stock({
+                stock: stockArr[0].stock,
+                price: stockArr[0].price,
+                likes: likeBool ? 1 : 0,
+                ip: ip
+              }).save((err,data)=>{
+                if (err) return err
+                return res.json({stockData: [
+                  {stock: data.stock, price: data.price, likes: data.likes},
+                  {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes}
+                ]})
+              })
             } else {
               
             }
