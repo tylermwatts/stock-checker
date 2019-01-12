@@ -66,12 +66,12 @@ suite('Functional Tests', function() {
           .end((err,res)=>{
             assert.equal(res.status, 200);
             assert.isArray(res.body.stockData);
-            assert.equal(res.body[0].stock, 'MSFT');
-            assert.equal(res.body[1].stock, 'GOOG');
-            assert.isString(res.body[0].price);
-            assert.isString(res.body[1].price);
-            assert.isNumber(res.body[0].likes);
-            assert.isNumber(res.body[1].likes);
+            assert.equal(res.body.stockData[0].stock, 'MSFT');
+            assert.equal(res.body.stockData[1].stock, 'GOOG');
+            assert.isString(res.body.stockData[0].price);
+            assert.isString(res.body.stockData[1].price);
+            assert.isNumber(res.body.stockData[0].likes);
+            assert.isNumber(res.body.stockData[1].likes);
             done();
           })
       });

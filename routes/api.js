@@ -80,16 +80,22 @@ module.exports = function (app) {
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
+              }).save((err,data)=>{
+                if (err) return err;
+                return data;
               })
               var stock2 = new Stock({
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
+              }).save((err,data)=>{
+                if (err) return err;
+                return data;
               })
               return res.json({stockData: [
                 {stock: stock1.stock, price: stock1.price, likes: stock1.likes},
-                {stock: stock2.stock, price: stock2.price}
+                {stock: stock2.stock, price: stock2.price, likes: stock2.likes}
               ]})
             }
           })
@@ -107,15 +113,18 @@ module.exports = function (app) {
                 price: fetchData.price,
                 likes: fetchData.likes,
                 ip: fetchData.ip,
+              }).save((err,data)=>{
+                return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
               })
-              console.log(createdStock)
-              return res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}})
             } else {
               stock.price = fetchData.price;
               if (stock.ip !== fetchData.ip && likeBool === true){
                 stock.likes++;
               }
-              return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
+              stock.save((err,data)=>{
+                if(err) return err;
+                return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
+              })
             }
           })
         }
