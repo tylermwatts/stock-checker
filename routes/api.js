@@ -67,7 +67,7 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(async function (req, res){
       var query = req.query;
-      var likeBool = query.like ? true : false
+      var likeBool = query.like || false
         if (Array.isArray(query.stock)){
           try {
             var stockArr = await getStockData(query.stock);
@@ -141,8 +141,8 @@ module.exports = function (app) {
                 stocks[1].likes++;
               }
               return res.json({stockData: [
-                {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes - },
-                {stock: stocks[1].stock, price: stocks[1].price, likes: stocks[1].likes}
+                {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - stocks[1].likes},
+                {stock: stocks[1].stock, price: stocks[1].price, rel_likes: stocks[1].likes - stocks[0].likes}
               ]})
             }
           })
