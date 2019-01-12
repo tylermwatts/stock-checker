@@ -52,24 +52,21 @@ module.exports = function (app) {
   }
   
   function stockSearch(stockToSearch, bool){
-    Stock.findOne({stock: stockToSearch.stock}, (err,stock)=>{
-      if (err) return ({error: err})
-          if (!stock){
-            stockToSearch.likes = bool === true ? 1 : 0
-            var newStock = createNewStock(stockToSearch)
-            return ({stock: newStock.stock, price: newStock.price, likes: newStock.likes})
-          } else {
-            stock.price = stockToSearch.price;
-            if (stock.ip !== stockToSearch.ip && bool === true){
-              stock.likes += 1;
-            } else {
-              return stock.save((err,data)=>{
-                if (err) return ({error: err})
-                return ({stock: data.stock, price: data.price, likes: data.likes})
-              })
-            }
+    Stock.findOne({stock: stockToSearch.stock}, function(err,stock){
+      if (err) return ({error: err});
+        if (!stock){
+          stockToSearch.likes = bool ? 1: 0
+          var createdStock = createNewStock(stockToSearch);
+          return ({stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes})
+        } else {
+          stock.price = stockToSearch.price;
+          if (stock.ip !== stockToSearch.ip && bool === true){
+            stock.likes++;
           }
-        })
+          console.log(stock);
+          return ({stock: stock.stock, price: stock.price, likes: stock.likes})
+        }
+    })
   }
 
   app.route('/api/stock-prices')
@@ -78,12 +75,7 @@ module.exports = function (app) {
       var likeBool = query.like ? true : false
         if (query.stock.isArray){
           var stock1 = await getStockData(query.stock[0]);
-          var stock2 = await getStockData(query.stock[1]);
-          stock1.ip = req.connection.remoteAddress;
-          stock2.ip = req.connection.remoteAddress;
-          var stockObj1 = stockSearch(stock1, likeBool);
-          var stockObj2 = stockSearch(stock2, likeBool);
-          return res.json({stockData: [stockObj1, stockObj2]});        
+          console.log(stock1)
         } else {
           var fetchData = await getStockData(query.stock);
           fetchData.ip = req.connection.remoteAddress;
