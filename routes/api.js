@@ -61,6 +61,7 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
+            console.log(stocks)
             if (stocks === undefined){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
@@ -84,11 +85,7 @@ module.exports = function (app) {
                 {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
                 {stock: stock2.stock, price: stock2.price, rel_likes: stock2.likes - stock1.likes}
               ]}))
-            } else if(stocks[0].stock !== stockArr[0].stock && stocks[0].stock === stockArr[1].stock){
-              stocks[0].price = stockArr[1].price
-              if (likeBool && ip !== stocks[0].ip){
-                stocks[0].likes += 1;
-              }
+            } else if(stockArr[0].stock !== stocks[0].stock && stockArr[0].stock !== stocks[1].stock){
               var newStock = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
@@ -104,8 +101,8 @@ module.exports = function (app) {
                 ]}))
             } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
               stocks[0].price = stockArr[0].price
-              if (likeBool && ip != stocks[0].ip){
-                stocks[0].likes++;
+              if (likeBool && ip !== stocks[0].ip){
+                stocks[0].likes += 1;
               }
               var newStock = new Stock({
                 stock: stockArr[1].stock,
@@ -122,8 +119,8 @@ module.exports = function (app) {
                ]}))
             }
             else {
-              stocks[0].price = stockArr[0].price
-              stocks[1].price = stockArr[1].price
+              // stocks[0].price = stockArr[0].price
+              // stocks[1].price = stockArr[1].price
               if (likeBool){
                 console.log('like passed as true');
                 if (stocks[0].ip !== ip){
