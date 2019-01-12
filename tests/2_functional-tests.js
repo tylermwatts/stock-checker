@@ -70,8 +70,8 @@ suite('Functional Tests', function() {
             assert.equal(res.body.stockData[1].stock, 'GOOG');
             assert.isString(res.body.stockData[0].price);
             assert.isString(res.body.stockData[1].price);
-            assert.isNumber(res.body.stockData[0].likes);
-            assert.isNumber(res.body.stockData[1].likes);
+            assert.isNumber(res.body.stockData[0].rel_likes);
+            assert.isNumber(res.body.stockData[1].rel_likes);
             done();
           })
       });

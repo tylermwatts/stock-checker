@@ -93,10 +93,10 @@ module.exports = function (app) {
               }).save((err,data)=>{
                 if (err) return err;
                 return data;
-              })
+              }) 
               return res.json({stockData: [
-                {stock: stock1.stock, price: stock1.price, likes: stock1.likes},
-                {stock: stock2.stock, price: stock2.price, likes: stock2.likes}
+                {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
+                {stock: stock2.stock, price: stock2.price, rel_likes: stock2.likes - stock1.likes}
               ]})
             } else if(stocks[0].stock !== stockArr[0].stock && stocks[0].stock === stockArr[1].stock){
               stocks[0].price = stockArr[1].price
@@ -111,8 +111,8 @@ module.exports = function (app) {
               }).save((err,data)=>{
                 if (err) return err
                 return res.json({stockData: [
-                  {stock: data.stock, price: data.price, likes: data.likes},
-                  {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes}
+                  {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes},
+                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes}
                 ]})
               })
             } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
@@ -128,15 +128,22 @@ module.exports = function (app) {
               }).save((err,data)=>{
                 if (err) return err
                 return res.json({stockData: [
-                  {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes},
-                  {stock: data.stock, price: data.price, likes: data.likes}
+                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes},
+                  {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes}
                 ]})
               })
             }
             else {
               stocks[0].price = stockArr[0].price
               stocks[1].price = stockArr[1].price
-              if (likeBool && ip !== 
+              if (likeBool && ip !== stocks[0].ip && ip !== stocks[1].ip){
+                stocks[0].likes++;
+                stocks[1].likes++;
+              }
+              return res.json({stockData: [
+                {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes - },
+                {stock: stocks[1].stock, price: stocks[1].price, likes: stocks[1].likes}
+              ]})
             }
           })
         } else {
