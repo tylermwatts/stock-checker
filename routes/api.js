@@ -73,7 +73,43 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
             console.log(stockArr);
           } catch (err){return err}
-          
+          var ip = req.connection.remoteAddress;
+          var stockObj1;
+          var stockObj2;
+          Stock.findOne({stock: stockArr[0].stock},function(err, stock){
+            if (err) return res.json({error: err});
+            if (!stock){
+              stockObj1 = new Stock({
+                stock: stockArr[0].stock,
+                price: stockArr[0].price,
+                likes: likeBool ? 1: 0,
+                ip: ip,
+              })
+            } else {
+              stock.price = stockArr[0].price;
+              if (stock.ip !== ip && likeBool === true){
+                stock.likes++;
+              }
+              stockObj1 = {stock: stock.stock, price: stock.price, likes: stock.likes}
+            }
+          })
+          Stock.findOne({stock: stockArr[1].stock},function(err, stock){
+            if (err) return res.json({error: err});
+            if (!stock){
+              stockObj1 = new Stock({
+                stock: stockArr[1].stock,
+                price: stockArr[1].price,
+                likes: likeBool ? 1: 0,
+                ip: ip,
+              })
+            } else {
+              stock.price = stockArr[1].price;
+              if (stock.ip !== ip && likeBool === true){
+                stock.likes++;
+              }
+              stockObj2 = {stock: stock.stock, price: stock.price, likes: stock.likes}
+            }
+          })
         } else {
           try {
             var fetchData = await getStockData(query.stock);
