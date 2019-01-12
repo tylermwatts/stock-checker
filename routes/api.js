@@ -62,24 +62,24 @@ module.exports = function (app) {
           var ip = req.connection.remoteAddress;
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
             console.log(stocks)
-            if (!stocks || stocks === undefined){
+            if (stocks === undefined){
               var stock1 = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
-              }).save((err,data)=>{
+              })
+              stock1.save(err=>{
                 if (err) return err;
-                return data;
               })
               var stock2 = new Stock({
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
-              }).save((err,data)=>{
+              })
+              stock2.save(err=>{
                 if (err) return err;
-                return data;
               }) 
               return done(null, res.json({stockData: [
                 {stock: stock1.stock, price: stock1.price, rel_likes: stock1.likes - stock2.likes},
@@ -95,13 +95,14 @@ module.exports = function (app) {
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
-              }).save((err,data)=>{
-                if (err) return err
-                return done(null, res.json({stockData: [
-                  {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes},
-                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes}
-                ]}))
               })
+              newStock.save(err=>{
+                if (err) return err
+              })
+              return done(null, res.json({stockData: [
+                  {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes},
+                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes}
+                ]}))
             } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
               stocks[0].price = stockArr[0].price
               if (likeBool && ip !== stocks[0].ip){
@@ -112,13 +113,14 @@ module.exports = function (app) {
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
                 ip: ip
-              }).save((err,data)=>{
-                if (err) return err
-                return done(null, res.json({stockData: [
-                  {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - data.likes},
-                  {stock: data.stock, price: data.price, rel_likes: data.likes - stocks[0].likes}
-                ]}))
               })
+              newStock.save(err=>{
+                if (err) return err
+              })
+              return done(null, res.json({stockData: [
+                 {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - newStock.likes},
+                 {stock: newStock.stock, price: newStock.price, rel_likes: newStock.likes - stocks[0].likes}
+               ]}))
             }
             else {
               stocks[0].price = stockArr[0].price
@@ -127,6 +129,12 @@ module.exports = function (app) {
                 stocks[0].likes++;
                 stocks[1].likes++;
               }
+              stocks[0].save(err=>{
+                if (err) return res.json({error: err})
+              })
+              stocks[1].save(err=>{
+                if (err) return res.json({error: err})
+              })
               return done(null, res.json({stockData: [
                 {stock: stocks[0].stock, price: stocks[0].price, rel_likes: stocks[0].likes - stocks[1].likes},
                 {stock: stocks[1].stock, price: stocks[1].price, rel_likes: stocks[1].likes - stocks[0].likes}
@@ -147,19 +155,19 @@ module.exports = function (app) {
                 likes: likeBool ? 1 : 0,
                 ip: ip,
               })
-              createdStock.save((err,data)=>{
+              createdStock.save(err=>{
                 if (err) return res.json({error: err})
-                return done(null, res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}}))
               })
+              return done(null, res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}}))
             } else {
               stock.price = fetchData.price;
               if (stock.ip !== fetchData.ip && likeBool){
                 stock.likes += 1;
               }
-              stock.save((err,data)=>{
+              stock.save(err=>{
                 if (err) return res.json({error: err})
-                return done(null, res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}}))
               })
+              return done(null, res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}}))
             }
           })
         }
