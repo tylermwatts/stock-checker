@@ -78,7 +78,7 @@ suite('Functional Tests', function() {
       test('2 stocks with like', function(done) {
         chai.request(server)
           .get('/api/stock-prices')
-          .query({stock: 'goog', like: true})
+          .query({stock: ['goog','msft'], like: true})
           .end((err,res)=>{
             assert.equal(res.status, 200);
             done();

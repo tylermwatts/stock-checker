@@ -63,8 +63,7 @@ module.exports = function (app) {
             console.log(typeof(query['stock']))
             var stockArr = await getStockData(query.stock);
             console.log(stockArr)
-          } catch (err){return err}
-          Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
+            Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
             console.log(stocks)
             if (stocks === undefined){
               let stock1 = new Stock({
@@ -168,11 +167,11 @@ module.exports = function (app) {
               ]})
             }
           })
+          } catch (err){return err}
         } else {
           try {
             var fetchData = await getStockData(query.stock);
-          } catch(err){res.json({error: err})}
-          Stock.findOne({stock: fetchData.stock}, function(err,stock){
+            Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
               let createdStock = new Stock({
@@ -199,6 +198,8 @@ module.exports = function (app) {
               return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
             }
           })
+          } catch(err){res.json({error: err})}
+          
         }
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
