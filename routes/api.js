@@ -57,7 +57,7 @@ module.exports = function (app) {
           if (!stock){
             stockToSearch.likes = bool === true ? 1 : 0
             var newStock = createNewStock(stockToSearch)
-            return {stock: newStock.stock, price: newStock.price, likes: newStock.likes}
+            return ({stock: newStock.stock, price: newStock.price, likes: newStock.likes})
           } else {
             stock.price = stockToSearch.price;
             if (stock.ip !== stockToSearch.ip && bool === true){
@@ -65,7 +65,7 @@ module.exports = function (app) {
             } else {
               return stock.save((err,data)=>{
                 if (err) return ({error: err})
-                return {stock: data.stock, price: data.price, likes: data.likes}
+                return ({stock: data.stock, price: data.price, likes: data.likes})
               })
             }
           }
@@ -76,7 +76,6 @@ module.exports = function (app) {
     .get(async function (req, res){
       var query = req.query;
       var boolToPass = query.like ? true : false
-      try{
         if (query.stock.isArray){
           var stock1 = await getStockData(query.stock[0]);
           var stock2 = await getStockData(query.stock[1]);
@@ -87,13 +86,12 @@ module.exports = function (app) {
           return res.json({stockData: [stockObj1, stockObj2]});        
         } else {
           var fetchData = await getStockData(query.stock);
+          console.log(fetchData)
           fetchData.ip = req.connection.remoteAddress;
+          console.log(fetchData)
           var stockDoc = stockSearch(fetchData, boolToPass);
           return res.json({stockData: stockDoc});
         }
-      } catch (err){
-        res.json(err)
-      }
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
     
