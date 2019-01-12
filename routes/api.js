@@ -29,10 +29,16 @@ module.exports = function (app) {
   
   function getStockData(stock){
     if (Array.isArray(stock)){
-      var url1 = ''
-      var url2 = ''
-      Promise.all([url1,url2])
-        .then(data => )
+      var url1 = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock[0]}&apikey=${process.env.API_KEY}`
+      var url2 = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock[1]}&apikey=${process.env.API_KEY}`
+      Promise
+        .all([url1,url2]
+             .map(url=>fetch(url)
+                  .then(response=> response.json())))
+        .then(data=>{
+          return [{stock: data[0]['Global Quote']['01. symbol'], price: data[0]['Global Quote']['05. price']},
+                  {stock: data[1]['Global Quote']['01. symbol'], price: data[1]['Global Quote']['05. price']}]
+        })
     } else {
       var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+stock+'&apikey='+process.env.API_KEY
       return fetch(url)
@@ -82,8 +88,8 @@ module.exports = function (app) {
       var likeBool = query.like ? true : false
         if (query.stock.isArray){
           try {
-            var stock1 = await getStockData(query.stock[0]);
-            console.log(stock1)
+            var stockArr = await getStockData(query.stock);
+            console.log(stockArr)
           } catch (err){return err}
           var stock2 = await getStockData(query.stock[1]);
         } else {
