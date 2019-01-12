@@ -56,15 +56,17 @@ module.exports = function (app) {
       var query = req.query;
       var likeBool = query.like ? 'true' ? true : false : false
       var ip = req.connection.remoteAddress.slice(7);
-        if (Array.isArray(query.stock)){
+        if (query.stock.isArray()){
           try {
+            console.log('trying to get stock data...')
+            console.log(typeof(query['stock']))
             var stockArr = await getStockData(query.stock);
             console.log(stockArr)
           } catch (err){return err}
           Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
             console.log(stocks)
             if (stocks === undefined){
-              var stock1 = new Stock({
+              let stock1 = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
@@ -73,7 +75,7 @@ module.exports = function (app) {
               stock1.save(err=>{
                 if (err) return err;
               })
-              var stock2 = new Stock({
+              let stock2 = new Stock({
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
@@ -99,7 +101,7 @@ module.exports = function (app) {
                   if (err) return res.json({error: err})
                 })
               }
-              var newStock = new Stock({
+              let newStock = new Stock({
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
@@ -125,7 +127,7 @@ module.exports = function (app) {
                   if (err) return res.json({error: err})
                 })
               }
-              var newStock = new Stock({
+              let newStock = new Stock({
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
@@ -172,7 +174,7 @@ module.exports = function (app) {
           Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
-              var createdStock = new Stock({
+              let createdStock = new Stock({
                 stock: fetchData.stock,
                 price: fetchData.price,
                 likes: likeBool ? 1 : 0,
