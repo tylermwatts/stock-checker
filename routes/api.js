@@ -68,7 +68,7 @@ module.exports = function (app) {
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip]
+                ip: likeBool ? [ip] : []
               })
               stock1.save(err=>{
                 if (err) return err;
@@ -77,7 +77,7 @@ module.exports = function (app) {
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip]
+                ip: likeBool ? [ip] : []
               })
               stock2.save(err=>{
                 if (err) return err;
@@ -103,7 +103,7 @@ module.exports = function (app) {
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip]
+                ip: likeBool ? [ip] : []
               })
               newStock.save(err=>{
                 if (err) return err
@@ -129,7 +129,7 @@ module.exports = function (app) {
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip]
+                ip: likeBool ? [ip] : []
               })
               newStock.save(err=>{
                 if (err) return err
@@ -176,7 +176,7 @@ module.exports = function (app) {
                 stock: fetchData.stock,
                 price: fetchData.price,
                 likes: likeBool ? 1 : 0,
-                ip: [ip]
+                ip: likeBool ? [ip] : []
               })
               createdStock.save(err=>{
                 if (err) return res.json({error: err})
