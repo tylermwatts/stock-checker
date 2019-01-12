@@ -98,7 +98,8 @@ module.exports = function (app) {
                 {stock: stock1.stock, price: stock1.price, likes: stock1.likes},
                 {stock: stock2.stock, price: stock2.price, likes: stock2.likes}
               ]})
-            } else if(stocks[0] !== stockArr[0] && stocks[0] === stockArr[1]){
+            } else if(stocks[0].stock !== stockArr[0].stock && stocks[0].stock === stockArr[1].stock){
+              stocks[0].price = stockArr[1].price
               if (likeBool && ip !== stocks[0].ip){
                 stocks[0].likes++;
               }
@@ -114,8 +115,28 @@ module.exports = function (app) {
                   {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes}
                 ]})
               })
-            } else {
-              
+            } else if(stocks[0].stock === stockArr[0].stock && stocks[1].stock !== stockArr[1].stock){
+              stocks[0].price = stockArr[0].price
+              if (likeBool && ip !== stocks[0].ip){
+                stocks[0].likes++;
+              }
+              var newStock = new Stock({
+                stock: stockArr[1].stock,
+                price: stockArr[1].price,
+                likes: likeBool ? 1 : 0,
+                ip: ip
+              }).save((err,data)=>{
+                if (err) return err
+                return res.json({stockData: [
+                  {stock: stocks[0].stock, price: stocks[0].price, likes: stocks[0].likes},
+                  {stock: data.stock, price: data.price, likes: data.likes}
+                ]})
+              })
+            }
+            else {
+              stocks[0].price = stockArr[0].price
+              stocks[1].price = stockArr[1].price
+              if (likeBool && ip !== 
             }
           })
         } else {
