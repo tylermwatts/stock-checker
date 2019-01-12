@@ -54,6 +54,7 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(async function (req, res){
       var query = req.query;
+      console.log(query)
       const likeBool = query.like ? 'true' ? true : false : false
       var ip = req.connection.remoteAddress.slice(7);
         if (Array.isArray(query.stock)){

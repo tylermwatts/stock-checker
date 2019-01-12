@@ -6,10 +6,10 @@
 *       (if additional are added, keep them at the very end!)
 */
 
-var chaiHttp = require('chai-http');
 var chai = require('chai');
 var assert = chai.assert;
 var server = require('../server');
+var chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
@@ -75,10 +75,10 @@ suite('Functional Tests', function() {
             done();
           })
       });
-      test('2 stocks with like', function(done){
+      test('2 stocks with like', function(done) {
         chai.request(server)
           .get('/api/stock-prices')
-          .query({stock: ['aapl', 'goog']})
+          .query({stock: 'goog', like: true})
           .end((err,res)=>{
             assert.equal(res.status, 200);
             done();
