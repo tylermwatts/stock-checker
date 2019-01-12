@@ -45,7 +45,7 @@ module.exports = function (app) {
       likes: stockObj.likes,
       ip: stockObj.ip,
     })
-    newStock.save((err,data)=>{
+    return newStock.save((err,data)=>{
       if (err) return {error: err}
       return data;
     })
@@ -86,11 +86,16 @@ module.exports = function (app) {
           return res.json({stockData: [stockObj1, stockObj2]});        
         } else {
           var fetchData = await getStockData(query.stock);
-          console.log(fetchData)
           fetchData.ip = req.connection.remoteAddress;
           console.log(fetchData)
-          var stockDoc = stockSearch(fetchData, boolToPass);
-          return res.json({stockData: stockDoc});
+          Stock.findOne({stock: fetchData.stock}, function(err,stock){
+            if (err) res.json({error: err});
+            if (!stock){
+              fetchData.likes = boolToPass ? 1 : 0
+              var createdStock = createNewStock(fetchData);
+              console.log(createdStock);
+            }
+          })
         }
     })// https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo
     
