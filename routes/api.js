@@ -150,16 +150,15 @@ module.exports = function (app) {
           try {
             var fetchData = await getStockData(query.stock);
           } catch(err){res.json({error: err})}
-          fetchData.ip = req.connection.remoteAddress;
+          var ip = req.connection.remoteAddress;
           Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
-              fetchData.likes = likeBool ? 1: 0
               var createdStock = new Stock({
                 stock: fetchData.stock,
                 price: fetchData.price,
-                likes: fetchData.likes,
-                ip: fetchData.ip,
+                likes: likeBool ? 1 : 0,
+                ip: ip,
               }).save((err,data)=>{
                 return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
               })
@@ -168,10 +167,7 @@ module.exports = function (app) {
               if (stock.ip !== fetchData.ip && likeBool === true){
                 stock.likes++;
               }
-              stock.save((err,data)=>{
-                if(err) return err;
-                return res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}})
-              })
+              return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
             }
           })
         }
