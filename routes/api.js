@@ -73,49 +73,11 @@ module.exports = function (app) {
             var stockArr = await getStockData(query.stock);
           } catch (err){return err}
           var ip = req.connection.remoteAddress;
-          Stock.findOne({stock: stockArr[0].stock},function(err, stock){
-            if (err) return res.json({error: err});
-            if (!stock){
-              var newStock1 = new Stock({
-                stock: stockArr[0].stock,
-                price: stockArr[0].price,
-                likes: likeBool ? 1: 0,
-                ip: ip,
-              })
-              newStock1.save((err,data)=>{
-                if (err) return err
-                return ({stock: data.stock, price: data.price, likes: data.likes})
-              })
-            } else {
-              stock.price = stockArr[0].price;
-              if (stock.ip !== ip && likeBool === true){
-                stock.likes++;
-              }
-              return ({stock: stock.stock, price: stock.price, likes: stock.likes})
+          Stock.find({ $or: [{stock: stockArr[0].stock}, {stock: stockArr[1]}]},function(err, stocks){
+            if (!stocks[0]){
+              
             }
           })
-          Stock.findOne({stock: stockArr[1].stock},function(err, stock){
-            if (err) return res.json({error: err});
-            if (!stock){
-              var newStock2 = new Stock({
-                stock: stockArr[1].stock,
-                price: stockArr[1].price,
-                likes: likeBool ? 1: 0,
-                ip: ip,
-              })
-              newStock2.save((err,data)=>{
-                if (err) return err
-                return ({stock: data.stock, price: data.price, likes: data.likes})
-              })
-            } else {
-              stock.price = stockArr[1].price;
-              if (stock.ip !== ip && likeBool === true){
-                stock.likes++;
-              }
-              return ({stock: stock.stock, price: stock.price, likes: stock.likes})
-            }
-          })
-          return res.json({stockData: [stockObj1, stockObj2]})
         } else {
           try {
             var fetchData = await getStockData(query.stock);
