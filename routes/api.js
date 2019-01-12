@@ -75,25 +75,30 @@ module.exports = function (app) {
   app.route('/api/stock-prices')
     .get(async function (req, res){
       var query = req.query;
-      var boolToPass = query.like ? true : false
+      var likeBool = query.like ? true : false
         if (query.stock.isArray){
           var stock1 = await getStockData(query.stock[0]);
           var stock2 = await getStockData(query.stock[1]);
           stock1.ip = req.connection.remoteAddress;
           stock2.ip = req.connection.remoteAddress;
-          var stockObj1 = stockSearch(stock1, boolToPass);
-          var stockObj2 = stockSearch(stock2, boolToPass);
+          var stockObj1 = stockSearch(stock1, likeBool);
+          var stockObj2 = stockSearch(stock2, likeBool);
           return res.json({stockData: [stockObj1, stockObj2]});        
         } else {
           var fetchData = await getStockData(query.stock);
           fetchData.ip = req.connection.remoteAddress;
-          console.log(fetchData)
           Stock.findOne({stock: fetchData.stock}, function(err,stock){
             if (err) res.json({error: err});
             if (!stock){
-              fetchData.likes = boolToPass ? 1 : 0
+              fetchData.likes = likeBool ? 1: 0
               var createdStock = createNewStock(fetchData);
-              console.log(createdStock);
+              return res.json({stockData: {stock: createdStock.stock, price: createdStock.price, likes: createdStock.likes}})
+            } else {
+              stock.price = fetchData.price;
+              if (stock.ip !== fetchData.ip && likeBool === true){
+                stock.likes++;
+              }
+              return res.json({stockData: {stock: stock.stock, price: stock.price, likes: stock.likes}})
             }
           })
         }
