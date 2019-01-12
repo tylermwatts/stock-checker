@@ -75,5 +75,14 @@ suite('Functional Tests', function() {
             done();
           })
       });
+      test('2 stocks with like', function(done){
+        chai.request(server)
+          .get('/api/stock-prices')
+          .query({stock: ['goog', 'msft'], like: true})
+          .end(function(err,res){
+            assert.equal(res.status, 200);
+            done();
+          })
+      })
     })
 });

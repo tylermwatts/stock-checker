@@ -20,7 +20,7 @@ const stockSchema = mongoose.Schema({
   stock: {type: String, required: true},
   price: {type: String, required: true},
   likes: {type: Number, required: true, default: 0},
-  ip: {type: String, required: true}
+  ip: {type: [], required: true}
 })
 
 const Stock = mongoose.model('Stock', stockSchema);
@@ -66,7 +66,7 @@ module.exports = function (app) {
                 stock: stockArr[0].stock,
                 price: stockArr[0].price,
                 likes: likeBool ? 1 : 0,
-                ip: ip
+                ip: [ip]
               })
               stock1.save(err=>{
                 if (err) return err;
@@ -75,7 +75,7 @@ module.exports = function (app) {
                 stock: stockArr[1].stock,
                 price: stockArr[1].price,
                 likes: likeBool ? 1 : 0,
-                ip: ip
+                ip: [ip
               })
               stock2.save(err=>{
                 if (err) return err;
