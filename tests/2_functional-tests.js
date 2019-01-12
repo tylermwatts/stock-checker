@@ -66,8 +66,8 @@ suite('Functional Tests', function() {
           .end((err,res)=>{
             assert.equal(res.status, 200);
             assert.isArray(res.body.stockData);
-            assert.isString(res.body.stockData[0].stock);
-            assert.isString(res.body.stockData[1].stock);
+            assert.equal(res.body.stockData[0].stock, 'GOOG');
+            assert.equal(res.body.stockData[1].stock, 'MSFT');
             assert.isString(res.body.stockData[0].price);
             assert.isString(res.body.stockData[1].price);
             assert.isNumber(res.body.stockData[0].rel_likes);
@@ -81,8 +81,9 @@ suite('Functional Tests', function() {
           .query({stock: ['goog','msft'], like: true})
           .end((err,res)=>{
             assert.equal(res.status, 200);
+            assert.isArray(res.body.stockData);
             done();
           })
       })
     })
-});
+}); 

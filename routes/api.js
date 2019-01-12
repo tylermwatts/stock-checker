@@ -59,8 +59,6 @@ module.exports = function (app) {
       var ip = req.connection.remoteAddress.slice(7);
         if (Array.isArray(query.stock)){
           try {
-            console.log('trying to get stock data...')
-            console.log(typeof(query['stock']))
             var stockArr = await getStockData(query.stock);
             console.log(stockArr)
             Stock.find({stock: { $in: [stockArr[0].stock, stockArr[1].stock]}},function(err, stocks){
